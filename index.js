@@ -26,6 +26,8 @@ app.post("/", async (req,res)=>{
         console.log("end");
        file.close();
        console.log("ready convert");
+       exec('ffmpeg -i audio.wav -ar 16000 -ac 1 -c:a pcm_s16le audio1.wav');
+       /*
       // exec('afplay audio.mp3', ()=>{console.log("played")});
         exec('ffmpeg -i audio.wav -ar 16000 -ac 1 -c:a pcm_s16le audio1.wav',() => {
             console.log("converted");
@@ -36,7 +38,7 @@ app.post("/", async (req,res)=>{
                 res.end(result);
             })
         })
-      
+      */
        
     });
 
