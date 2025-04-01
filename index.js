@@ -26,6 +26,7 @@ app.post("/", (req,res)=>{
         console.log(body);
        file.close();
       // exec('afplay audio.mp3', ()=>{console.log("played")});
+       exec('./../whisper.cpp/build/bin/whisper-cli -m models/ggml-tiny.bin -l de -f ./audio.wav > log.txt')
        res.end();
        
     });
