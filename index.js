@@ -26,8 +26,9 @@ app.post("/", async (req,res)=>{
         console.log(body);
        file.close();
       // exec('afplay audio.mp3', ()=>{console.log("played")});
-        await pexec('./../whisper.cpp/build/bin/whisper-cli -m ./../whisper.cpp/models/ggml-tiny.bin -l de -f ./audio.wav -otxt')
-        let result = fs.readFileSync('audio.wav.txt','utf8')
+        await pexec('ffmpeg -i audio.wav -ar 16000 -ac 1 -c:a pcm_s16le audio1.wav')
+        await pexec('./../whisper.cpp/build/bin/whisper-cli -m ./../whisper.cpp/models/ggml-tiny.bin -l de -f ./audio1.wav -otxt')
+        let result = fs.readFileSync('audio1.wav.txt','utf8')
         res.end(result);
        
     });
