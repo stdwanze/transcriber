@@ -2,8 +2,6 @@ const polka = require('polka');
 const { raw } = require('body-parser');
 const fs = require('fs');
 const { exec } = require('child_process');
-const { promisify } = require('util')
-const pexec = promisify(exec)
 const app =  polka();
 var c = 0;
 const PORT = process.env.PORT || 3444;
@@ -26,13 +24,17 @@ app.post("/", async (req,res)=>{
         console.log("end");
        file.close();
        console.log("ready convert");
-       await pexec('ffmpeg -i audio.wav -ar 16000 -ac 1 -c:a pcm_s16le audio1.wav');
-       console.log("converted");
-       await pexec('./../whisper.cpp/build/bin/whisper-cli -m ./../whisper.cpp/models/ggml-tiny.bin -l de -f ./audio1.wav -otxt');
-       console.log("transcribed");
-       let result = fs.readFileSync('audio1.wav.txt','utf8')
-       console.log("send back: "+ result);
-       res.end(result);
+       exec('ffmpeg -i audio.wav -ar 16000 -ac 1 -c:a pcm_s16le audio1.wav', () => {
+        console.log("converted");
+        exec('./../whisper.cpp/build/bin/whisper-cli -m ./../whisper.cpp/models/ggml-tiny.bin -l de -f ./audio1.wav -otxt', () => {
+            console.log("transcribed");
+            let result = fs.readFileSync('audio1.wav.txt','utf8')
+            console.log("send back: "+ result);
+            res.end(result);
+        });
+    
+        });
+      
        
     });
 
