@@ -24,7 +24,7 @@ app.post("/", async (req,res)=>{
         console.log("end");
        file.close();
        console.log("ready convert");
-       exec('ffmpeg -i audio.wav -ar 16000 -ac 1 -c:a pcm_s16le audio1.wav', () => {
+       exec('ffmpeg -i audio.wav -ar 16000 -ac 1 -y -c:a pcm_s16le audio1.wav', () => {
         console.log("converted");
         exec('./../whisper.cpp/build/bin/whisper-cli -m ./../whisper.cpp/models/ggml-tiny.bin -l de -f ./audio1.wav -otxt', () => {
             console.log("transcribed");
