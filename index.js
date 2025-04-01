@@ -27,13 +27,16 @@ app.post("/", async (req,res)=>{
        file.close();
        console.log("ready convert");
       // exec('afplay audio.mp3', ()=>{console.log("played")});
-        await pexec('ffmpeg -i audio.wav -ar 16000 -ac 1 -c:a pcm_s16le audio1.wav')
-        console.log("converted");
-        await pexec('./../whisper.cpp/build/bin/whisper-cli -m ./../whisper.cpp/models/ggml-tiny.bin -l de -f ./audio1.wav -otxt')
-        console.log("transcribed");
-        let result = fs.readFileSync('audio1.wav.txt','utf8')
-        console.log("send back: "+ result);
-        res.end(result);
+        exec('ffmpeg -i audio.wav -ar 16000 -ac 1 -c:a pcm_s16le audio1.wav',() => {
+            console.log("converted");
+            exec('./../whisper.cpp/build/bin/whisper-cli -m ./../whisper.cpp/models/ggml-tiny.bin -l de -f ./audio1.wav -otxt', () =>{
+                console.log("transcribed");
+                let result = fs.readFileSync('audio1.wav.txt','utf8')
+                console.log("send back: "+ result);
+                res.end(result);
+            })
+        })
+      
        
     });
 
