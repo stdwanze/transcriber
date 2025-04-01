@@ -28,7 +28,7 @@ app.post("/", async (req,res)=>{
       // exec('afplay audio.mp3', ()=>{console.log("played")});
         await pexec('./../whisper.cpp/build/bin/whisper-cli -m ./../whisper.cpp/models/ggml-tiny.bin -l de -f ./audio.wav -otxt')
         let result = fs.readFileSync('audio.wav.txt','utf8')
-        res.send(result);
+        res.end(result);
        
     });
 
