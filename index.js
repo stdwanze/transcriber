@@ -22,14 +22,16 @@ app.post("/", async (req,res)=>{
     });
     req.on('end', async () => {
         console.log("end");
+        let start = new Date();
        file.close();
        console.log("ready convert");
        exec('ffmpeg -i audio.wav -ar 16000 -ac 1 -y -c:a pcm_s16le audio1.wav', () => {
         console.log("converted");
-        exec('./../whisper.cpp/build/bin/whisper-cli -m ./../whisper.cpp/models/ggml-small.bin -l de -f ./audio1.wav -otxt', () => {
+        exec('./../whisper.cpp/build/bin/whisper-cli -m ./../whisper.cpp/models/ggml-base.bin -l de -f ./audio1.wav -otxt', () => {
             console.log("transcribed");
             let result = fs.readFileSync('audio1.wav.txt','utf8')
             console.log("send back: "+ result);
+            console.log()
             res.end(result);
         });
     
